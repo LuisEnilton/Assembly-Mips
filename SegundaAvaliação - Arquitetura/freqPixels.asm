@@ -2,11 +2,13 @@
 	n: .word 
 	quebra_: .asciiz "\n"
 	espaco_ : .asciiz " "
+	doisPontos_: ":"
 	array: .word 197,199,199,199,199,200,202,205,202,205,205,203,203,204,203,200,201,198,195,
 195,198,200,202,202,199,198,198,199,201,202,202,202,203,203,202,201,200,201,
-201,201,199,199,199,200,200,200,200,200,201,202 
-	freq: 	.align 2 # freq vai de 195 a 205
-		.space 40 #espaço de 40 inteiros(10 palavras)
+201,201,199,199,199,200,200,200,200,200,201,202
+ 
+	freq: .align 2 
+		.space 44
 
 #O vetor freq guarda as frequencias do 195(menor) até 205(maior) '195' corresponde ao indice 0 do vetor
 
@@ -31,15 +33,22 @@
 		  
 			addi $t0,$t0,4	
 			j while
-	
+	saida:
 	li $t0,0
-	li $t2 ,40
+	li $t2 ,44
 		loop2:
 			beq $t0 , $t2,saida2
+			li $t1 , 4
+			div $t0,$t1
+			mflo $a0
+			addi $a0 , $a0 , 195
+			jal printInteiro
+			jal doisPontos
+			jal espaco
 			lw  $a0 , freq($t0)
 			jal printInteiro
 			addi $t0,$t0,4
-			jal espaco
+			jal quebra
 			j loop2
 	saida2:
 		j final
@@ -47,7 +56,7 @@
 
 limpar_vetor_freq:
 		li $t0 , 0 #indice
-		li $t1 , 40
+		li $t1 , 44
 		loop:
 			beq $t0 , $t1,retorno
 			sw $zero,freq($t0)
@@ -67,7 +76,12 @@ espaco:
 	li $v0,4
 	la $a0 , espaco_
 	syscall		
-	jr $ra	
+	jr $ra
+doisPontos:
+	li $v0,4
+	la $a0 , doisPontos_
+	syscall		
+	jr $ra		
 quebra:
 	li $v0,4
 	la $a0 , quebra_
